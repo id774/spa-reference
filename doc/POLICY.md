@@ -1131,6 +1131,11 @@ correct.
 Merging a pull request is a human responsibility. An automated agent does not
 merge a pull request unless the maintainer explicitly instructs it to do so.
 
+An automated agent must not commit or push directly to `master`.
+It must commit authorized changes to a work branch and submit them through
+a pull request targeting the approved base branch. This paragraph does not
+change a human maintainer's authority or the existing merge approval rule.
+
 ### 2.24 Maintenance Standard
 
 This repository is a maintained public reference implementation, not a
