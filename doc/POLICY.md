@@ -1058,11 +1058,9 @@ resources.
 
 ### 2.21 License and Attribution
 
-This repository is dual licensed under the GPL version 3 or the LGPL version 3,
-at the recipient's option.
-
-The authoritative license notice is [`LICENSE.md`](LICENSE.md). The full license
-texts are [`COPYING`](COPYING) and [`COPYING.LESSER`](COPYING.LESSER).
+Apply the repository license terms as defined by [`LICENSE.md`](LICENSE.md),
+[`COPYING`](COPYING), and [`COPYING.LESSER`](COPYING.LESSER), without
+redefining those terms here.
 
 Repository-authored source carries the license metadata defined by Section
 2.4.4 when that section applies.
