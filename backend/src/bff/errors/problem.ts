@@ -6,8 +6,8 @@
 // identifier.
 //
 // Unknown errors become INTERNAL_ERROR without exposing their messages. Server
-// errors are logged with a bounded, secret-free diagnostic; client errors are
-// logged at info level.
+// errors are logged with a bounded, secret-free diagnostic, and client errors
+// are logged at info level.
 //
 // Author: id774 (More info: https://id774.net)
 // Source Code: https://github.com/id774/spa-reference

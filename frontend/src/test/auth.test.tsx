@@ -20,9 +20,9 @@
 //
 // Test Cases:
 //     - PKCE sign-in and callback validation
-//     - No tokens in browser storage; open-redirect guard
+//     - No tokens in browser storage and open-redirect guard
 //     - Sign-out and 401 handling
-//     - Roles from the session API only; presentation gates
+//     - Roles from the session API only and presentation gates
 //     - Token refresh and failure
 //
 // Requirements:
@@ -196,7 +196,8 @@ describe('role-aware presentation', () => {
   });
 
   it('does not decode the access token to decide roles', async () => {
-    // The fake access token is not a JWT; roles can only have come from the session API.
+    // The fake access token is not a JWT, so roles can only have come from the
+    // session API.
     backend.roles = ['Approver'];
     await signIn(harness);
     expect(await screen.findByRole('link', { name: 'Approval Queue' })).toBeInTheDocument();

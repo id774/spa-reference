@@ -1,22 +1,36 @@
 # spa-reference
 
-A public reference implementation of a transactional business single-page application: a React and TypeScript SPA in front of a NestJS BFF/backend, running on AWS.
+A public reference implementation of a transactional business single-page
+application: a React and TypeScript SPA in front of a NestJS BFF/backend,
+running on AWS.
 
-It demonstrates one supported way to compose these technologies and their cross-cutting concerns (authentication, authorization, API contract, transactions, auditing, notifications, files, configuration, CI, and deployment). It is a reference implementation, not a universal framework, and it makes no claim to fit every kind of web application. The sample domain is a generic request and approval application.
+It demonstrates one supported way to compose these technologies and their
+cross-cutting concerns (authentication, authorization, API contract,
+transactions, auditing, notifications, files, configuration, CI, and
+deployment). It is a reference implementation, not a universal framework, and
+it makes no claim to fit every kind of web application. The sample domain is a
+generic request and approval application.
 
 ## Current capabilities
 
-- **Requester**: create, edit, and submit requests; attach files to a draft.
-- **Approver**: work an approval queue; approve or reject submitted requests.
+- **Requester**: create, edit, and submit requests, and attach files to a draft.
+- **Approver**: work an approval queue, and approve or reject submitted
+  requests.
 - **Administrator**: read all requests and inspect the audit history.
 - Attachment list, upload, and download.
-- A fully local demo (`npm run demo`) with fixed demo identities, and Cognito authentication (OAuth 2.0 Authorization Code with PKCE) in the AWS deployment, with role-based authorization in both.
-- Aurora PostgreSQL-compatible persistence with optimistic concurrency and local transactions.
-- S3 attachment storage, SES email, and SNS event publication delivered through a transactional outbox.
+- A fully local demo (`npm run demo`) with fixed demo identities, and Cognito
+  authentication (OAuth 2.0 Authorization Code with PKCE) in the AWS
+  deployment, with role-based authorization in both.
+- Aurora PostgreSQL-compatible persistence with optimistic concurrency and local
+  transactions.
+- S3 attachment storage, SES email, and SNS event publication delivered through
+  a transactional outbox.
 - Business audit events and structured application logging, kept separate.
 - CI, Docker images, and an AWS CDK deployment definition.
 
-The current backend is a single deployable application, and AWS is the only supported cloud. Microservices, Java, other clouds, and similar directions are future concepts described in the requirements, not current features.
+The current backend is a single deployable application, and AWS is the only
+supported cloud. Microservices, Java, other clouds, and similar directions are
+future concepts described in the requirements, not current features.
 
 ## Architecture
 
@@ -30,15 +44,24 @@ Application Load Balancer
    '-- other paths --> frontend (static SPA)
 ```
 
-The BFF is the browser-facing boundary. Requests, Approvals, Attachments, and Audit are capabilities called in process. See [`doc/BASIC_DESIGN.md`](doc/BASIC_DESIGN.md) and [`doc/DETAILED_DESIGN.md`](doc/DETAILED_DESIGN.md).
+The BFF is the browser-facing boundary. Requests, Approvals, Attachments, and
+Audit are capabilities called in process. See
+[`doc/BASIC_DESIGN.md`](doc/BASIC_DESIGN.md) and
+[`doc/DETAILED_DESIGN.md`](doc/DETAILED_DESIGN.md).
 
 ## Technology stack
 
-Node.js 24 with npm workspaces; React, TypeScript, and Vite; NestJS; Prisma with PostgreSQL (Aurora PostgreSQL-compatible); AWS SDK for JavaScript v3; AWS CDK v2; OpenAPI 3.1; Vitest, React Testing Library, and Supertest. Versions are pinned by `package-lock.json`.
+The stack consists of Node.js 24 with npm workspaces, React, TypeScript, Vite,
+NestJS, Prisma with PostgreSQL (Aurora PostgreSQL-compatible), the AWS SDK for
+JavaScript v3, AWS CDK v2, and OpenAPI 3.1. Testing uses Vitest, React Testing
+Library, and Supertest. Versions are pinned by `package-lock.json`.
 
 ## Quick start
 
-The first runnable path is a fully local demo. After the dependencies and the PostgreSQL Docker image are downloaded, it needs no external account, cloud credential, or third-party service: no AWS, Cognito, S3, SES, SNS, API key, or `.env` file. (Cloning, `npm ci`, and the first image pull need network access.)
+The first runnable path is a fully local demo. After the dependencies and the
+PostgreSQL Docker image are downloaded, it needs no external account, cloud
+credential, or third-party service: no AWS, Cognito, S3, SES, SNS, API key, or
+`.env` file. (Cloning, `npm ci`, and the first image pull need network access.)
 
 Prerequisites: Node.js 24 with npm, plus an operating-system-level Docker
 installation that provides Docker Engine, the `docker` CLI, and Docker Compose
@@ -55,9 +78,19 @@ npm ci
 npm run demo
 ```
 
-`npm run demo` checks the prerequisites, starts PostgreSQL, applies the migrations, starts the backend and the frontend, and prints `Local demo is ready.` only when all of them answer. Then open <http://127.0.0.1:5173/>.
+`npm run demo` checks the prerequisites, starts PostgreSQL, applies the
+migrations, starts the backend and the frontend, and prints
+`Local demo is ready.` only when all of them answer. Then open
+<http://127.0.0.1:5173/>.
 
-You should see a sign-in screen with **Continue as Requester**, **Continue as Approver**, and **Continue as Administrator**. Create a request, attach a file, submit it, approve it as the Approver, and inspect the audit history as the Administrator. The acceptance walkthrough and the **Local demo PASS** checklist are in [`doc/GETTING_STARTED.md`](doc/GETTING_STARTED.md#4-milestone-1-local-demo); the screens are described in [`doc/USER_GUIDE.md`](doc/USER_GUIDE.md#7-demo-tutorial).
+You should see a sign-in screen with **Continue as Requester**,
+**Continue as Approver**, and **Continue as Administrator**. Create a request,
+attach a file, submit it, approve it as the Approver, and inspect the audit
+history as the Administrator. The acceptance walkthrough and the
+**Local demo PASS** checklist are in
+[`doc/GETTING_STARTED.md`](doc/GETTING_STARTED.md#4-milestone-1-local-demo).
+The screens are described in
+[`doc/USER_GUIDE.md`](doc/USER_GUIDE.md#7-demo-tutorial).
 
 | Command | Effect |
 | --- | --- |
@@ -66,7 +99,12 @@ You should see a sign-in screen with **Continue as Requester**, **Continue as Ap
 | `npm run demo:reset` | Removes all local demo data, for a blank start. |
 | `npm run demo:deliveries` | Shows the recorded emails and events. |
 
-The local demo listens on `127.0.0.1` only, uses fixed demo identities and no real authentication, and is for learning and evaluation. It reuses the application logic, HTTP API, database model, transactional outbox, and authorization of the AWS deployment; only the external infrastructure adapters differ. The AWS deployment (`APP_MODE=aws`, the default) uses Cognito and never accepts the demo tokens.
+The local demo listens on `127.0.0.1` only, uses fixed demo identities and no
+real authentication, and is for learning and evaluation. It reuses the
+application logic, HTTP API, database model, transactional outbox, and
+authorization of the AWS deployment. Only the external infrastructure adapters
+differ. The AWS deployment (`APP_MODE=aws`, the default) uses Cognito and never
+accepts the demo tokens.
 
 ### Local demo complete. What next?
 
@@ -95,7 +133,9 @@ The local demo listens on `127.0.0.1` only, uses fixed demo identities and no re
 | Prisma validation | `npm run prisma:validate` |
 | CDK synthesis | `npm run synth` |
 
-Details, including the database that the backend tests need, are in [`doc/GETTING_STARTED.md`](doc/GETTING_STARTED.md) and [`doc/DEVELOPMENT.md`](doc/DEVELOPMENT.md).
+Details, including the database that the backend tests need, are in
+[`doc/GETTING_STARTED.md`](doc/GETTING_STARTED.md) and
+[`doc/DEVELOPMENT.md`](doc/DEVELOPMENT.md).
 
 ## Repository structure
 
@@ -133,7 +173,10 @@ Details, including the database that the backend tests need, are in [`doc/GETTIN
 
 This repository uses `master` as its primary branch name.
 
-The name is used solely as a technical identifier, following the long-standing convention historically used by Git. It does not express or imply any association with racism, slavery, discrimination, or any political or social ideology.
+The name is used solely as a technical identifier, following the long-standing
+convention historically used by Git. It does not express or imply any
+association with racism, slavery, discrimination, or any political or social
+ideology.
 
 ## License
 

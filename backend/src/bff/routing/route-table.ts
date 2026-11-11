@@ -6,7 +6,7 @@
 // ROUTE_NOT_FOUND and a known path with an unsupported method with 405
 // METHOD_NOT_ALLOWED and an Allow header.
 //
-// The authoritative contract is openapi/openapi.yaml; this table must stay
+// The authoritative contract is openapi/openapi.yaml, and this table must stay
 // consistent with it.
 //
 // Author: id774 (More info: https://id774.net)

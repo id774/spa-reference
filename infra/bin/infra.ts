@@ -2,8 +2,8 @@
 //
 // Description:
 // Bootstraps the CDK application and instantiates the ReferenceStack. All
-// deployment inputs are CDK context values and none of them is a secret;
-// placeholder defaults keep cdk synth runnable without an AWS account.
+// deployment inputs are CDK context values and none of them is a secret.
+// Placeholder defaults keep cdk synth runnable without an AWS account.
 //
 // The account and region come from the CDK environment variables, and the
 // region defaults to ap-northeast-1. Deployment itself is outside the standard
@@ -32,7 +32,7 @@ import { ReferenceStack } from '../lib/reference-stack.js';
 
 const app = new App();
 
-/** All deployment inputs are CDK context values; none of them is a secret. */
+/** All deployment inputs are CDK context values, and none of them is a secret. */
 function context(name: string, fallback: string): string {
   const value: unknown = app.node.tryGetContext(name);
   return typeof value === 'string' && value !== '' ? value : fallback;

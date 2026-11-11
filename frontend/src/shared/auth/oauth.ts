@@ -5,7 +5,7 @@
 // refreshes tokens, and stores the short-lived authentication transaction.
 //
 // Only the transaction values (PKCE verifier, state, return path) survive the
-// full-page redirect, in sessionStorage; they are not tokens. Only same-origin
+// full-page redirect, in sessionStorage. They are not tokens. Only same-origin
 // absolute paths are accepted as a return path, which prevents open redirects.
 //
 // Author: id774 (More info: https://id774.net)

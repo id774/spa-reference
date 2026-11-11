@@ -3,8 +3,8 @@
 // Description:
 // Maps the request and approval endpoints onto the capability services: list,
 // create, get, update, submit, approve, reject, and the approval queue. Each
-// operation declares its coarse roles; resource authorization and state rules
-// stay in the capability services.
+// operation declares its coarse roles, while resource authorization and state
+// rules stay in the capability services.
 //
 // Request bodies are read only after authentication and role checks have
 // passed. Creating a request requires a verified email address, resolved

@@ -64,10 +64,16 @@ export type AuthStatus = 'signed-in' | 'signed-out';
 export interface AuthContextValue {
   status: AuthStatus;
   session: Session | null;
-  /** UI role state from GET /api/session. Presentation only; the server authorizes. */
+  /**
+   * UI role state from GET /api/session. It is for presentation only, and the
+   * server authorizes.
+   */
   roles: readonly SessionRole[];
   api: ApiClient;
-  /** `local` is the no-external-service demo; `cognito` is the Amazon Cognito flow. */
+  /**
+   * `local` is the no-external-service demo, and `cognito` is the Amazon
+   * Cognito flow.
+   */
   authMode: RuntimeConfig['authMode'];
   /** Local demo only: continues as one of the fixed demo identities. */
   signInLocal(role: SessionRole): Promise<void>;

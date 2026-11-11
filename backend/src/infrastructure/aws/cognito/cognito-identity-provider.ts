@@ -8,7 +8,7 @@
 //
 // Cognito and HTTP types stop in this adapter. Provider failures become
 // IDENTITY_PROVIDER_UNAVAILABLE and token problems become
-// AUTHENTICATION_REQUIRED; tokens are never logged.
+// AUTHENTICATION_REQUIRED. Tokens are never logged.
 //
 // Author: id774 (More info: https://id774.net)
 // Source Code: https://github.com/id774/spa-reference
@@ -58,7 +58,7 @@ const HTTP_TIMEOUT_MS = 5000;
 /**
  * Cognito adapter: access-token validation against the user-pool JWKS and
  * verified-email lookup through the UserInfo endpoint. Cognito specifics stop
- * here; callers receive an application Identity.
+ * here, and callers receive an application Identity.
  */
 export class CognitoIdentityProvider implements IdentityProvider {
   private keys = new Map<string, KeyObject>();

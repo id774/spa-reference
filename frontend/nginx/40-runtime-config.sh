@@ -15,7 +15,7 @@
 # Contact: idnanashi@gmail.com
 #
 # Usage:
-#     Run by the nginx image entrypoint (/docker-entrypoint.d); not run by hand.
+#     Run by the nginx image entrypoint (/docker-entrypoint.d), not by hand.
 #
 # Requirements:
 # - POSIX sh and envsubst (provided by the nginx image)

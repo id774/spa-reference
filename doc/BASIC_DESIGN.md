@@ -182,7 +182,7 @@ Browser --> Vite dev server (SPA, proxies /api) --> backend (APP_MODE=local)
 It differs from the AWS topology only at the external adapters. The same
 domain and application code, HTTP API, database model, transactional outbox,
 and authorization run in both. The adapter set is selected once at bootstrap by
-the explicit `APP_MODE` value (`aws` by default, or `local`); no business code
+the explicit `APP_MODE` value (`aws` by default, or `local`). No business code
 branches on it. In `local` mode the identity adapter maps three fixed demo
 tokens to the three roles, object storage is a local directory, and the email
 and event adapters append records to local files. No AWS client is created in
@@ -476,7 +476,7 @@ A user who belongs to several of these groups holds the union of the
 permissions of those roles.
 
 The BFF derives the roles. The SPA reads the roles of the current session from
-`GET /api/session`; role visibility in the frontend is presentation only, and
+`GET /api/session`. Role visibility in the frontend is presentation only, and
 the backend remains the authorization authority.
 
 An authenticated user who belongs to none of these groups holds no application
@@ -539,9 +539,9 @@ Cognito-specific token parsing and validation belong to the identity
 infrastructure adapter.
 
 The authoritative refinement of the authentication flow, token validation,
-verified email, SPA session, and sign-out behavior is in [`DETAILED_DESIGN.md`](DETAILED_DESIGN.md) sections 6 and 7,
-and of the session API, SPA bootstrap, and browser state reconstruction in
-sections 22 and 23.
+verified email, SPA session, and sign-out behavior is in
+[`DETAILED_DESIGN.md`](DETAILED_DESIGN.md) sections 6 and 7, and of the session
+API, SPA bootstrap, and browser state reconstruction in sections 22 and 23.
 
 ## 11. Authorization model
 
@@ -607,8 +607,8 @@ caller.
 
 Frontend visibility is not an authorization decision.
 
-The authoritative refinement of the authorization model is in [`DETAILED_DESIGN.md`](DETAILED_DESIGN.md)
-section 8.
+The authoritative refinement of the authorization model is in
+[`DETAILED_DESIGN.md`](DETAILED_DESIGN.md) section 8.
 
 ## 12. Backend composition
 
@@ -1180,7 +1180,8 @@ The SNS message body is this JSON payload. The SNS message attribute
 de-duplication key.
 
 The authoritative refinement of notification payloads and of the outbox
-lifecycle and recovery is in [`DETAILED_DESIGN.md`](DETAILED_DESIGN.md) sections 12 and 13.
+lifecycle and recovery is in [`DETAILED_DESIGN.md`](DETAILED_DESIGN.md) sections 12
+and 13.
 
 ## 23. Attachment flow
 
@@ -1226,7 +1227,7 @@ The attachment metadata of a request is listed through
 `GET /api/requests/{requestId}/attachments`, with the same visibility as
 download, in the stable order `createdAt` ascending then `id` ascending. The
 list is the authoritative way to rediscover attachment identifiers after a
-reload; an upload response is never the only source of an attachment identifier.
+reload. An upload response is never the only source of an attachment identifier.
 
 Download flow:
 
@@ -1250,8 +1251,9 @@ BFF streams object to Browser
 The browser never receives reusable AWS credentials.
 
 The authoritative refinement of attachment acceptance, storage, upload
-finalization, and download headers is in [`DETAILED_DESIGN.md`](DETAILED_DESIGN.md) section 14,
-and of attachment list authorization and ordering in sections 8.12 and 10.7.
+finalization, and download headers is in [`DETAILED_DESIGN.md`](DETAILED_DESIGN.md)
+section 14, and of attachment list authorization and ordering in sections 8.12
+and 10.7.
 
 ## 24. AWS infrastructure adapters
 
@@ -1428,8 +1430,8 @@ The ALB target-group health check uses readiness, not a business endpoint.
 Health responses do not disclose credentials, connection strings, internal host
 names, or stack traces.
 
-The authoritative refinement of liveness and readiness behavior is in [`DETAILED_DESIGN.md`](DETAILED_DESIGN.md)
-section 17.
+The authoritative refinement of liveness and readiness behavior is in
+[`DETAILED_DESIGN.md`](DETAILED_DESIGN.md) section 17.
 
 ## 29. Frontend deployment behavior
 
@@ -1705,7 +1707,8 @@ The server log retains the diagnostic detail needed by an operator.
 The client never receives a raw stack trace.
 
 The authoritative refinement of error precedence, external-failure mapping, and
-the stable error-code set is in [`DETAILED_DESIGN.md`](DETAILED_DESIGN.md) sections 4, 18, and 20.
+the stable error-code set is in [`DETAILED_DESIGN.md`](DETAILED_DESIGN.md) sections 4,
+18, and 20.
 
 ## 37. Current deployment and future extraction boundary
 

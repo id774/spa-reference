@@ -40,7 +40,7 @@ interface ClaimedRow {
 
 /**
  * Outbox persistence. Raw SQL is limited to this class and always uses bound
- * parameters; row selection uses FOR UPDATE SKIP LOCKED so that several
+ * parameters. Row selection uses FOR UPDATE SKIP LOCKED so that several
  * backend tasks claim distinct rows.
  */
 export class PrismaOutboxStore implements OutboxStore {

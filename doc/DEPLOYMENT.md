@@ -1,6 +1,13 @@
 # Deployment guide
 
-How the current AWS deployment is defined and deployed. (To run the application locally without AWS, see the local demo in [`GETTING_STARTED.md`](GETTING_STARTED.md), section 4; the deployment always runs with `APP_MODE=aws`.) The definition is the CDK application in [`infra/`](../infra/); this guide describes what it does today and nothing more. There is no automated deployment pipeline: CI only validates (it runs `cdk synth`), and a deployment is something you run yourself. Settings are listed in [`CONFIGURATION.md`](CONFIGURATION.md), runtime behavior in [`OPERATIONS.md`](OPERATIONS.md).
+How the current AWS deployment is defined and deployed. (To run the application
+locally without AWS, see the local demo in [`GETTING_STARTED.md`](GETTING_STARTED.md),
+section 4. The deployment always runs with `APP_MODE=aws`.) The definition is
+the CDK application in [`infra/`](../infra/). This guide describes what it does
+today and nothing more. There is no automated deployment pipeline: CI only
+validates (it runs `cdk synth`), and a deployment is something you run yourself.
+Settings are listed in [`CONFIGURATION.md`](CONFIGURATION.md), and runtime
+behavior in [`OPERATIONS.md`](OPERATIONS.md).
 
 ## 1. Prerequisites
 
@@ -8,15 +15,20 @@ How the current AWS deployment is defined and deployed. (To run the application 
 - To synthesize only (`npm run synth`): nothing else. No AWS account is needed.
 - To deploy:
   - an AWS account and an authenticated AWS CLI environment (credentials and region);
-  - **Docker**, running locally: `cdk deploy` builds the two container images from `backend/Dockerfile` and `frontend/Dockerfile`;
-  - CDK bootstrapping of the target account and region (`npx cdk bootstrap`), which the image assets require;
+  - **Docker**, running locally: `cdk deploy` builds the two container images
+    from `backend/Dockerfile` and `frontend/Dockerfile`;
+  - CDK bootstrapping of the target account and region (`npx cdk bootstrap`),
+    which the image assets require;
   - the public host name for the application (`appDomain`);
   - optionally an ACM certificate in the same region for HTTPS (`certificateArn`);
-  - a verified SES sender identity for `sesSenderAddress`. The stack does not create or verify it, and the state of the SES account (for example sandbox restrictions on recipients) is outside the stack.
+  - a verified SES sender identity for `sesSenderAddress`. The stack does not
+    create or verify it, and the state of the SES account (for example sandbox
+    restrictions on recipients) is outside the stack.
 
 ## 2. What the stack creates
 
-The stack `SpaDevelopmentReference` ([`infra/lib/reference-stack.ts`](../infra/lib/reference-stack.ts)) creates:
+The stack `SpaDevelopmentReference`
+([`infra/lib/reference-stack.ts`](../infra/lib/reference-stack.ts)) creates:
 
 | Area | Resources |
 | --- | --- |
@@ -32,7 +44,8 @@ The stack `SpaDevelopmentReference` ([`infra/lib/reference-stack.ts`](../infra/l
 | Logs | A CloudWatch log group per task definition (backend, frontend, migration), kept for one month. |
 | Migration | A separate one-off task definition for database migrations (section 6). |
 
-Task sizes: backend and migration 0.5 vCPU / 1 GiB, frontend 0.25 vCPU / 0.5 GiB. Services use a deployment circuit breaker with rollback.
+Task sizes: backend and migration 0.5 vCPU / 1 GiB, frontend 0.25 vCPU /
+0.5 GiB. Services use a deployment circuit breaker with rollback.
 
 ## 3. Synthesize
 
@@ -40,11 +53,14 @@ Task sizes: backend and migration 0.5 vCPU / 1 GiB, frontend 0.25 vCPU / 0.5 GiB
 npm run synth
 ```
 
-This runs `cdk synth --quiet` in `infra/` using placeholder context values, so it works offline from AWS. CI runs it on every change. The application entry point is configured in `infra/cdk.json`.
+This runs `cdk synth --quiet` in `infra/` using placeholder context values, so
+it works offline from AWS. CI runs it on every change. The application entry
+point is configured in `infra/cdk.json`.
 
 ## 4. Deploy
 
-Run the CDK commands from `infra/`, passing the context values from [`CONFIGURATION.md`](CONFIGURATION.md), section 3:
+Run the CDK commands from `infra/`, passing the context values from
+[`CONFIGURATION.md`](CONFIGURATION.md), section 3:
 
 ```sh
 cd infra
@@ -56,26 +72,47 @@ npx cdk deploy \
   -c cognitoDomainPrefix=<unique-prefix>
 ```
 
-Replace every value with your own; omit `certificateArn` for a non-production HTTP deployment. This guide does not deploy anything itself.
+Replace every value with your own, and omit `certificateArn` for a
+non-production HTTP deployment. This guide does not deploy anything itself.
 
 After the first deployment, in this order:
 
-1. **Migrate the database** (section 6). Until this is done the backend answers `/health/ready` but the application cannot work.
-2. **Create users and assign groups**: the user pool starts empty. Create users and add them to the `Requester`, `Approver`, or `Administrator` group (for example with `aws cognito-idp admin-create-user` and `admin-add-user-to-group` against the `UserPoolId` output; exact commands are in [`GETTING_STARTED.md`](GETTING_STARTED.md), section 8.4). A user needs a verified email address to create requests.
-3. **DNS**: point `appDomain` at the `LoadBalancerDnsName` output. The stack does not manage DNS. The certificate, if any, must cover `appDomain`.
-4. **Open the deployed application** at `https://<appDomain>/` (`http://` without a certificate).
-5. **Continue with the demo**: [`GETTING_STARTED.md`](GETTING_STARTED.md), section 8 (Milestone 3) and the screen-by-screen [`USER_GUIDE.md`](USER_GUIDE.md).
+1. **Migrate the database** (section 6). Until this is done the backend answers
+   `/health/ready` but the application cannot work.
+2. **Create users and assign groups**: the user pool starts empty. Create users
+   and add them to the `Requester`, `Approver`, or `Administrator` group (for
+   example with `aws cognito-idp admin-create-user` and
+   `admin-add-user-to-group` against the `UserPoolId` output). The exact
+   commands are in [`GETTING_STARTED.md`](GETTING_STARTED.md), section 8.4. A
+   user needs a verified email address to create requests.
+3. **DNS**: point `appDomain` at the `LoadBalancerDnsName` output. The stack
+   does not manage DNS. The certificate, if any, must cover `appDomain`.
+4. **Open the deployed application** at `https://<appDomain>/` (`http://`
+   without a certificate).
+5. **Continue with the demo**: [`GETTING_STARTED.md`](GETTING_STARTED.md),
+   section 8 (Milestone 3) and the screen-by-screen
+   [`USER_GUIDE.md`](USER_GUIDE.md).
 
-A successful `cdk deploy` is not a completed demo. The stack creates no demo users, no DNS records, no SES identity verification, and no SNS subscription; the demo is complete only when the Milestone 3 criteria in [`GETTING_STARTED.md`](GETTING_STARTED.md), section 10, pass.
+A successful `cdk deploy` is not a completed demo. The stack creates no demo
+users, no DNS records, no SES identity verification, and no SNS subscription.
+The demo is complete only when the Milestone 3 criteria in
+[`GETTING_STARTED.md`](GETTING_STARTED.md), section 10, pass.
 
 ## 5. HTTPS
 
-- With `certificateArn`: an HTTPS listener on port 443 with that certificate, and a listener on port 80 that redirects permanently to HTTPS.
-- Without it: a single HTTP listener on port 80, intended for non-production use only.
+- With `certificateArn`: an HTTPS listener on port 443 with that certificate,
+  and a listener on port 80 that redirects permanently to HTTPS.
+- Without it: a single HTTP listener on port 80, intended for non-production use
+  only.
 
 ## 6. Database migration
 
-Starting the backend never applies migrations. The stack therefore defines a separate migration task definition that runs the committed migrations (`npm run migrate:deploy -w @spa-ref/backend`) with the same image, database settings, and Secrets Manager credentials as the backend, and then exits. Run it as a one-off Fargate task after the first deployment and after any deployment that adds migrations:
+Starting the backend never applies migrations. The stack therefore defines a
+separate migration task definition that runs the committed migrations
+(`npm run migrate:deploy -w @spa-ref/backend`) with the same image, database
+settings, and Secrets Manager credentials as the backend, and then exits. Run it
+as a one-off Fargate task after the first deployment and after any deployment
+that adds migrations:
 
 ```sh
 aws ecs run-task \
@@ -85,7 +122,12 @@ aws ecs run-task \
   --network-configuration "awsvpcConfiguration={subnets=[<application subnet ids>],securityGroups=[<migration security group id>],assignPublicIp=DISABLED}"
 ```
 
-The stack outputs the cluster and the task definition but not the network values. Use the private subnets that have egress (the subnet group named `application`) and the security group whose description is `One-off database migration task`; that group is the one the database allows. The task logs to the migration log group (stream prefix `migrate`). Nothing in the repository runs this task automatically.
+The stack outputs the cluster and the task definition but not the network
+values. Use the private subnets that have egress (the subnet group named
+`application`) and the security group whose description is
+`One-off database migration task`. That group is the one the database allows.
+The task logs to the migration log group (stream prefix `migrate`). Nothing in
+the repository runs this task automatically.
 
 ## 7. Stack outputs
 

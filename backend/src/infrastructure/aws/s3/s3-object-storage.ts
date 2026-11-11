@@ -32,7 +32,7 @@ import { Readable } from 'node:stream';
 import { AppError } from '../../../common/errors.js';
 import type { ObjectStorage } from '../../../capabilities/shared/ports.js';
 
-/** S3 adapter. SDK types stop here; failures become application errors. */
+/** S3 adapter. SDK types stop here, and failures become application errors. */
 export class S3ObjectStorage implements ObjectStorage {
   constructor(
     private readonly client: S3Client,

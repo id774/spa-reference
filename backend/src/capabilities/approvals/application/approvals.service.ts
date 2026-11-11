@@ -6,7 +6,7 @@
 // one approval row per request, the audit event, and the email and event
 // outbox rows.
 //
-// External delivery is never part of this transaction; it happens later
+// External delivery is never part of this transaction. It happens later
 // through the outbox.
 //
 // Author: id774 (More info: https://id774.net)

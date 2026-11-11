@@ -26,7 +26,10 @@ const TONES: Readonly<Record<string, string>> = {
   REJECTED: 'danger',
 };
 
-/** A request status as a chip. The text always carries the meaning; the color only reinforces it. */
+/**
+ * A request status as a chip. The text always carries the meaning, and the
+ * color only reinforces it.
+ */
 export function StatusBadge({ status }: { status: string }) {
   return <span className={`ui-badge ui-badge--${TONES[status] ?? 'neutral'}`}>{status}</span>;
 }

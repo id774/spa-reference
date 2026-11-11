@@ -5,7 +5,7 @@
 // /config.json, for either the Cognito sign-in or the local demo. It contains
 // no secret.
 //
-// The application does not start with an invalid configuration; the loader
+// The application does not start with an invalid configuration. The loader
 // fails with a ConfigurationError instead.
 //
 // Author: id774 (More info: https://id774.net)
@@ -36,7 +36,10 @@ export interface CognitoRuntimeConfig {
   postLogoutUri: string;
 }
 
-/** Local demo: the SPA selects one of the fixed demo identities; no external IdP is used. */
+/**
+ * Local demo mode. The SPA selects one of the fixed demo identities, and no
+ * external IdP is used.
+ */
 export interface LocalRuntimeConfig {
   authMode: 'local';
 }
@@ -62,7 +65,10 @@ function url(value: unknown, name: string): string {
   return candidate;
 }
 
-/** Validates runtime configuration; the application does not start with an invalid one. */
+/**
+ * Validates runtime configuration. The application does not start with an
+ * invalid one.
+ */
 export function parseRuntimeConfig(raw: unknown): RuntimeConfig {
   const root = (raw ?? {}) as Record<string, unknown>;
   const authMode = root['authMode'];

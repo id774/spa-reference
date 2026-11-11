@@ -62,7 +62,10 @@ const ROLE_SUMMARY: Readonly<Record<SessionRole, string>> = {
 const NO_ROLE_MESSAGE =
   'Your account has no application role. Ask an administrator to grant access.';
 
-/** Protected routes need an in-memory session; a reload lands on the signed-out screen. */
+/**
+ * Protected routes need an in-memory session, so a reload lands on the
+ * signed-out screen.
+ */
 function ProtectedRoute() {
   const { status } = useAuth();
   const location = useLocation();
