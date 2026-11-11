@@ -213,7 +213,8 @@ export class PrismaPersistence implements Persistence {
         const repositories = createRepositories(db);
         return work({
           ...repositories,
-          // Parameterized row lock; the request is then read through the same transaction.
+          // Takes a parameterized row lock. The request is then read through the
+          // same transaction.
           lockRequest: async (id) => {
             await db.$queryRaw`SELECT id FROM requests WHERE id = ${id}::uuid FOR UPDATE`;
             return repositories.requests.findById(id);

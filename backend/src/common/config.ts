@@ -3,7 +3,7 @@
 // Description:
 // Resolves the process environment once into typed, validated configuration
 // for the local or aws mode. Missing or invalid required values fail bootstrap
-// with a ConfigError; AWS settings are required in aws mode only and never
+// with a ConfigError. AWS settings are required in aws mode only and never
 // fall back to local mode.
 //
 // Domain and application code receive this typed configuration and never read
@@ -133,7 +133,7 @@ function parseRetryDelays(value: string | undefined): number[] | null {
 
 /**
  * Resolves and validates all configuration. Invalid or missing required values
- * fail bootstrap; nothing is silently normalized or defaulted around a
+ * fail bootstrap. Nothing is silently normalized or defaulted around a
  * required capability.
  */
 export function loadConfig(env: Env): AppConfig {

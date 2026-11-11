@@ -45,7 +45,10 @@ export class FakeBackend {
   calls: string[] = [];
   tokenGrants: URLSearchParams[] = [];
   validTokens = new Set<string>();
-  /** Identities issued per token (local demo); overrides subject/roles for those tokens. */
+  /**
+   * Identities issued per token (local demo). They override subject/roles for
+   * those tokens.
+   */
   tokenIdentities = new Map<string, { subject: string; roles: SessionRole[] }>();
   /** Roles issued with the next refreshed token. */
   rolesAfterRefresh: SessionRole[] | null = null;

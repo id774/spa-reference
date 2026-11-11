@@ -6,8 +6,8 @@
 // reload, and an upload re-fetches the list instead of trusting the upload
 // response alone.
 //
-// Upload is offered only when the caller may upload; the server still enforces
-// role, ownership, and state.
+// Upload is offered only when the caller may upload, but the server still
+// enforces role, ownership, and state.
 //
 // Author: id774 (More info: https://id774.net)
 // Source Code: https://github.com/id774/spa-reference

@@ -8,7 +8,7 @@
 // declared by the Roles decorator.
 //
 // The Public decorator exempts an operation from authentication. Roles are
-// always derived by the server; this file never trusts a role supplied by the
+// always derived by the server. This file never trusts a role supplied by the
 // browser.
 //
 // Author: id774 (More info: https://id774.net)

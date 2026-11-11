@@ -50,7 +50,10 @@ const REDACTED_PATHS = [
   '*.secret',
 ];
 
-/** Creates the JSON logger. Fields: timestamp, level, traceId, userId, operation, capability, message. */
+/**
+ * Creates the JSON logger. Its fields are timestamp, level, traceId, userId,
+ * operation, capability, and message.
+ */
 export function createLogger(level: string, destination?: NodeJS.WritableStream): AppLogger {
   const logger = pino(
     {

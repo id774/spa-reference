@@ -24,7 +24,10 @@
 import { PublishCommand, type SNSClient } from '@aws-sdk/client-sns';
 import type { EventMessage, EventPublisher } from '../../../outbox/ports.js';
 
-/** SNS adapter: the message body is the JSON payload; `eventType` is a message attribute. */
+/**
+ * SNS adapter. The message body is the JSON payload, and `eventType` is a
+ * message attribute.
+ */
 export class SnsEventPublisher implements EventPublisher {
   constructor(
     private readonly client: SNSClient,

@@ -30,7 +30,7 @@ import { AppError } from '../../common/errors.js';
 export class SessionController {
   /**
    * The server-derived application identity for SPA presentation. No role is
-   * required; a caller with no recognized group receives an empty role list.
+   * required. A caller with no recognized group receives an empty role list.
    */
   @Get('session')
   session(@Req() req: Request) {

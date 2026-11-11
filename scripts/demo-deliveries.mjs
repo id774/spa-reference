@@ -3,7 +3,7 @@
 // Description:
 // Prints, using Node.js built-ins only, the email and event records that the
 // local demo backend wrote as NDJSON under .local/deliveries, in a
-// human-readable form. Having no record yet is a normal state, not an error; a
+// human-readable form. Having no record yet is a normal state, not an error. A
 // line that is not valid JSON is reported with the file and line number.
 //
 // Author: id774 (More info: https://id774.net)

@@ -62,7 +62,7 @@ export function RequestTable({ caption, rows }: { caption: string; rows: ApiRequ
   );
 }
 
-/** My Requests for a Requester; every request for an Administrator. */
+/** My Requests for a Requester, and every request for an Administrator. */
 export function RequestListPage() {
   const { api, roles } = useAuth();
   const list = usePagedList<ApiRequest>(

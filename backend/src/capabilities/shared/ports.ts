@@ -80,7 +80,10 @@ export interface OutboxRow {
   createdAt: Date;
 }
 
-/** Repository methods return up to `limit` rows; callers pass limit+1 to detect another page. */
+/**
+ * Repository methods return up to `limit` rows. Callers pass limit+1 to detect
+ * another page.
+ */
 export interface RequestRepository {
   findById(id: string): Promise<RequestRecord | null>;
   insert(request: RequestRecord): Promise<void>;

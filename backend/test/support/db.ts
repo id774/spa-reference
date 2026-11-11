@@ -13,7 +13,8 @@
 // - Node.js 24 or later
 // - TypeScript 5.9.3
 // - See backend/package.json for workspace dependencies
-// - A PostgreSQL-compatible test database (TEST_DATABASE_URL, default postgresql://postgres:postgres@localhost:5432/spa_test)
+// - A PostgreSQL-compatible test database (TEST_DATABASE_URL, default
+//   postgresql://postgres:postgres@localhost:5432/spa_test)
 //
 // Version History:
 // v1.0 2026-10-03

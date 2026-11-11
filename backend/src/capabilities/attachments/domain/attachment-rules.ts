@@ -99,7 +99,7 @@ export function normalizeMediaType(declared: string): AcceptedMediaType | null {
   return mediaType;
 }
 
-/** The multipart file name is display metadata only; it is never a storage path. */
+/** The multipart file name is display metadata only. It is never a storage path. */
 export function validateFileName(raw: string): { ok: true; name: string } | { ok: false } {
   const name = raw.normalize('NFC');
   if (name.length === 0 || name.length > 255) return { ok: false };

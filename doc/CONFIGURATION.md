@@ -1,10 +1,17 @@
 # Configuration reference
 
-Every setting the implementation reads, with its default and validation. The code is the source: [`backend/src/common/config.ts`](../backend/src/common/config.ts) for the backend, [`frontend/src/app/config.ts`](../frontend/src/app/config.ts) for the browser, and [`infra/bin/infra.ts`](../infra/bin/infra.ts) for the AWS stack. A local sample is in [`.env.example`](../.env.example).
+Every setting the implementation reads, with its default and validation. The
+code is the source: [`backend/src/common/config.ts`](../backend/src/common/config.ts)
+for the backend, [`frontend/src/app/config.ts`](../frontend/src/app/config.ts)
+for the browser, and [`infra/bin/infra.ts`](../infra/bin/infra.ts) for the AWS
+stack. A local sample is in [`.env.example`](../.env.example).
 
 ## 1. Backend
 
-The backend resolves its configuration once at start-up from environment variables. Nothing below `main.ts` reads the environment. Invalid or missing required values fail the start-up and the message lists every problem found; nothing is silently corrected.
+The backend resolves its configuration once at start-up from environment
+variables. Nothing below `main.ts` reads the environment. Invalid or missing
+required values fail the start-up, and the message lists every problem found.
+Nothing is silently corrected.
 
 | Variable | Required | Default | Purpose | Secret |
 | --- | --- | --- | --- | --- |
@@ -40,16 +47,38 @@ The backend resolves its configuration once at start-up from environment variabl
 
 Notes:
 
-- **Application mode**: `APP_MODE=aws` is the default and keeps every AWS value required; there is no fallback to local behavior. In `APP_MODE=local` the `COGNITO_*`, `AWS_REGION`, `S3_BUCKET`, `SES_SENDER`, and `SNS_TOPIC_ARN` values are neither required nor read, the database defaults to `postgresql://postgres:postgres@127.0.0.1:55432/spa_reference` (the `compose.yaml` database), and the fixed demo tokens `demo-requester`, `demo-approver`, and `demo-administrator` are accepted. Those tokens are non-secret demo values; `aws` mode never accepts them. Local mode is for a single machine only. See [`GETTING_STARTED.md`](GETTING_STARTED.md), section 4.
-- **Database**: with `DATABASE_URL` unset, the URL is built from `DB_HOST`, `DB_NAME`, `DB_USERNAME`, and `DB_PASSWORD` (all four must be set; `DB_PORT` defaults to `5432`). A URL built this way has no query parameters.
-- **Capability mode**: `local` is the only supported value. Any other value, including `remote`, fails the start-up. Routing is fixed for the lifetime of the process.
-- **AWS credentials** are not application settings. The AWS SDK finds them in its standard chain: the ECS task role when deployed, the environment or a profile locally.
-- **Prisma CLI**: `backend/prisma.config.ts` reads `DATABASE_URL` or the same `DB_*` variables for `prisma migrate` and friends. When none is set it falls back to a placeholder URL so that `prisma generate` and `prisma validate` work without a database.
-- **Tests**: `TEST_DATABASE_URL` (default `postgresql://postgres:postgres@localhost:5432/spa_test`) is read by the backend test suite only. See [`DEVELOPMENT.md`](DEVELOPMENT.md).
+- **Application mode**: `APP_MODE=aws` is the default and keeps every AWS value
+  required. There is no fallback to local behavior. In `APP_MODE=local` the
+  `COGNITO_*`, `AWS_REGION`, `S3_BUCKET`, `SES_SENDER`, and `SNS_TOPIC_ARN`
+  values are neither required nor read, the database defaults to
+  `postgresql://postgres:postgres@127.0.0.1:55432/spa_reference` (the
+  `compose.yaml` database), and the fixed demo tokens `demo-requester`,
+  `demo-approver`, and `demo-administrator` are accepted. Those tokens are
+  non-secret demo values, and `aws` mode never accepts them. Local mode is for a
+  single machine only. See [`GETTING_STARTED.md`](GETTING_STARTED.md), section 4.
+- **Database**: with `DATABASE_URL` unset, the URL is built from `DB_HOST`,
+  `DB_NAME`, `DB_USERNAME`, and `DB_PASSWORD`. All four must be set, and
+  `DB_PORT` defaults to `5432`. A URL built this way has no query parameters.
+- **Capability mode**: `local` is the only supported value. Any other value,
+  including `remote`, fails the start-up. Routing is fixed for the lifetime of
+  the process.
+- **AWS credentials** are not application settings. The AWS SDK finds them in
+  its standard chain: the ECS task role when deployed, the environment or a
+  profile locally.
+- **Prisma CLI**: `backend/prisma.config.ts` reads `DATABASE_URL` or the same
+  `DB_*` variables for `prisma migrate` and friends. When none is set it falls
+  back to a placeholder URL so that `prisma generate` and `prisma validate` work
+  without a database.
+- **Tests**: `TEST_DATABASE_URL` (default
+  `postgresql://postgres:postgres@localhost:5432/spa_test`) is read by the
+  backend test suite only. See [`DEVELOPMENT.md`](DEVELOPMENT.md).
 
 ## 2. Frontend runtime configuration
 
-The SPA loads `/config.json` before it starts. If any value is missing or is not a URL where a URL is expected, the SPA shows a configuration error instead of starting. All values are browser-safe and public: **no secret belongs in this file**, and the SPA has no client secret.
+The SPA loads `/config.json` before it starts. If any value is missing or is
+not a URL where a URL is expected, the SPA shows a configuration error instead
+of starting. All values are browser-safe and public: **no secret belongs in this
+file**, and the SPA has no client secret.
 
 | `config.json` key | Container environment variable | Purpose |
 | --- | --- | --- |
@@ -61,13 +90,26 @@ The SPA loads `/config.json` before it starts. If any value is missing or is not
 | `redirectUri` | `APP_REDIRECT_URI` | OAuth redirect URI, `<origin>/auth/callback`. |
 | `postLogoutUri` | `APP_POST_LOGOUT_URI` | Return URI after sign-out, `<origin>/signed-out`. |
 
-- **Development**: `frontend/public/config.json` is the file served by `npm run dev -w @spa-ref/frontend`. It holds `{"authMode": "local"}` for the local demo. To use a real Cognito app client, replace it locally with `authMode: "cognito"` and the keys above; do not commit real values. The `cognito.*`, `redirectUri`, and `postLogoutUri` keys are required only when `authMode` is `cognito`.
-- **Container**: the frontend image does not contain a `config.json`. At start-up `frontend/nginx/40-runtime-config.sh` renders it from `frontend/nginx/config.json.template` using the six environment variables above (it always renders `authMode: "cognito"`), and the container refuses to start if any is missing. The CDK stack supplies them (see [`DEPLOYMENT.md`](DEPLOYMENT.md)).
-- Redirect and sign-out URIs must be registered on the Cognito app client; the CDK stack registers `<origin>/auth/callback` and `<origin>/signed-out`.
+- **Development**: `frontend/public/config.json` is the file served by
+  `npm run dev -w @spa-ref/frontend`. It holds `{"authMode": "local"}` for the
+  local demo. To use a real Cognito app client, replace it locally with
+  `authMode: "cognito"` and the keys above, and do not commit real values. The
+  `cognito.*`, `redirectUri`, and `postLogoutUri` keys are required only when
+  `authMode` is `cognito`.
+- **Container**: the frontend image does not contain a `config.json`. At
+  start-up `frontend/nginx/40-runtime-config.sh` renders it from
+  `frontend/nginx/config.json.template` using the six environment variables
+  above (it always renders `authMode: "cognito"`), and the container refuses to
+  start if any is missing. The CDK stack supplies them (see
+  [`DEPLOYMENT.md`](DEPLOYMENT.md)).
+- Redirect and sign-out URIs must be registered on the Cognito app client. The
+  CDK stack registers `<origin>/auth/callback` and `<origin>/signed-out`.
 
 ## 3. CDK context
 
-The AWS stack takes four context values, set with `-c name=value` on the `cdk` command line or in `infra/cdk.json`. None of them is a secret. They are read in [`infra/bin/infra.ts`](../infra/bin/infra.ts).
+The AWS stack takes four context values, set with `-c name=value` on the `cdk`
+command line or in `infra/cdk.json`. None of them is a secret. They are read in
+[`infra/bin/infra.ts`](../infra/bin/infra.ts).
 
 | Context key | Default | Meaning |
 | --- | --- | --- |
@@ -76,7 +118,9 @@ The AWS stack takes four context values, set with `-c name=value` on the `cdk` c
 | `sesSenderAddress` | `noreply@example.com` | SES sender address. Becomes the backend's `SES_SENDER` and the SES identity that the task role may send from. |
 | `cognitoDomainPrefix` | `spa-reference-example` | Prefix of the Cognito hosted UI domain (`<prefix>.auth.<region>.amazoncognito.com`). It must be unique in the region. |
 
-The placeholder defaults let `npm run synth` work without an AWS account. The stack's region is `CDK_DEFAULT_REGION` when set, otherwise `ap-northeast-1`; the account is `CDK_DEFAULT_ACCOUNT` when set.
+The placeholder defaults let `npm run synth` work without an AWS account. The
+stack's region is `CDK_DEFAULT_REGION` when set, otherwise `ap-northeast-1`.
+The account is `CDK_DEFAULT_ACCOUNT` when set.
 
 ## 4. Secrets
 
@@ -86,4 +130,7 @@ The placeholder defaults let `npm run synth` work without an AWS account. The st
 | Aurora username and password | AWS Secrets Manager (the secret generated for the Aurora cluster). | ECS injects them into the backend and migration containers as `DB_USERNAME` and `DB_PASSWORD`. |
 | Browser configuration | Nowhere: it contains no secret. | `config.json` as described above. |
 
-Real credentials must never be committed: not in source, in `.env.example`, in `frontend/public/config.json`, or in an image. `.env` files are ignored by Git. The backend's logger redacts token and secret fields, and logs contain no credentials.
+Real credentials must never be committed: not in source, in `.env.example`, in
+`frontend/public/config.json`, or in an image. `.env` files are ignored by Git.
+The backend's logger redacts token and secret fields, and logs contain no
+credentials.

@@ -60,7 +60,7 @@ describe('cursor pagination', () => {
     } while (cursor);
     expect(seen).toHaveLength(5);
     expect(new Set(seen).size).toBe(5);
-    // Newest timestamp first; equal timestamps by ascending id.
+    // Newest timestamp first, with equal timestamps ordered by ascending id.
     expect(seen.slice(0, 2)).toEqual(ids.slice(3).sort().slice(0, 2));
   });
 

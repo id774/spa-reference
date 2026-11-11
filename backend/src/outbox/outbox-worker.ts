@@ -7,7 +7,7 @@
 //
 // Delivery is at-least-once: a provider call that succeeded just before a
 // crash is repeated after the claim lease expires. Retry delays, the attempt
-// limit, and the lease are settings; their semantics are specified in
+// limit, and the lease are settings, and their semantics are specified in
 // doc/DETAILED_DESIGN.md. Emails contain the request identifier, title, and
 // status only.
 //

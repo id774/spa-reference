@@ -9,7 +9,7 @@
 //
 // It needs no AWS account, credential, or .env file. If either application
 // process dies after startup the other one is stopped. The down command keeps
-// the data; reset removes the database volume and the local attachment and
+// the data, and reset removes the database volume and the local attachment and
 // delivery files.
 //
 // Author: id774 (More info: https://id774.net)
@@ -52,7 +52,7 @@ const READY_TIMEOUT_MS = 120_000;
 const DATABASE_WAIT_SECONDS = 90;
 const STOP_GRACE_MS = 5_000;
 
-/** Environment for the local backend. Local demo values only; not secrets. */
+/** Environment for the local backend. These are local demo values, not secrets. */
 const backendEnv = {
   ...process.env,
   APP_MODE: 'local',

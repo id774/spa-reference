@@ -38,7 +38,8 @@ export default tseslint.config(
   {
     languageOptions: { globals: { ...globals.node } },
     rules: {
-      // Unused values must be removed; an underscore prefix marks an intentional ignore.
+      // Unused values must be removed. An underscore prefix marks an intentional
+      // ignore.
       '@typescript-eslint/no-unused-vars': [
         'error',
         { argsIgnorePattern: '^_', varsIgnorePattern: '^_', ignoreRestSiblings: true },

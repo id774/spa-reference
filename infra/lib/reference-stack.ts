@@ -45,7 +45,7 @@ export interface ReferenceStackProps extends StackProps {
   appDomain: string;
   /** ACM certificate for the HTTPS listener. Without it the listener is HTTP (non-production only). */
   certificateArn?: string | undefined;
-  /** SES sender address; it must already be verified in the SES account. */
+  /** SES sender address. It must already be verified in the SES account. */
   sesSenderAddress: string;
   /** Prefix of the Cognito hosted UI domain. */
   cognitoDomainPrefix: string;
@@ -63,8 +63,9 @@ const ASSET_EXCLUDES = [
 
 /**
  * The AWS deployment of the current reference: ALB, ECS/Fargate (frontend and
- * backend), Aurora PostgreSQL, S3, Cognito, SNS, Secrets Manager, and IAM task roles.
- * Nothing here deploys itself; production deployment is outside the standard CI.
+ * backend), Aurora PostgreSQL, S3, Cognito, SNS, Secrets Manager, and IAM task
+ * roles. Nothing here deploys itself, and production deployment is outside the
+ * standard CI.
  */
 export class ReferenceStack extends Stack {
   constructor(scope: Construct, id: string, props: ReferenceStackProps) {
@@ -237,7 +238,7 @@ export class ReferenceStack extends Stack {
         exclude: ASSET_EXCLUDES,
       }),
       portMappings: [{ containerPort: 8080 }],
-      // Browser-safe runtime configuration only; the SPA has no secret.
+      // Browser-safe runtime configuration only, because the SPA has no secret.
       environment: {
         COGNITO_CLIENT_ID: spaClient.userPoolClientId,
         COGNITO_AUTHORIZATION_ENDPOINT: `${cognitoBase}/oauth2/authorize`,

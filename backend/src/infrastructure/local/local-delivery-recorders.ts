@@ -5,7 +5,7 @@
 // <dataDir>/deliveries (local demo mode only), instead of calling SES or SNS.
 //
 // The records are read back by scripts/demo-deliveries.mjs. The outbox still
-// runs in local mode; only the external providers are replaced.
+// runs in local mode. Only the external providers are replaced.
 //
 // Author: id774 (More info: https://id774.net)
 // Source Code: https://github.com/id774/spa-reference
@@ -30,7 +30,10 @@ async function append(path: string, record: Record<string, unknown>): Promise<vo
   await appendFile(path, `${JSON.stringify(record)}\n`, 'utf8');
 }
 
-/** Records each sent email as a line in `<dataDir>/deliveries/email.ndjson` (local demo mode only). */
+/**
+ * Records each sent email as a line in `<dataDir>/deliveries/email.ndjson`
+ * (local demo mode only).
+ */
 export class LocalMailSender implements MailSender {
   private readonly file: string;
 
@@ -48,7 +51,10 @@ export class LocalMailSender implements MailSender {
   }
 }
 
-/** Records each published event as a line in `<dataDir>/deliveries/events.ndjson` (local demo mode only). */
+/**
+ * Records each published event as a line in
+ * `<dataDir>/deliveries/events.ndjson` (local demo mode only).
+ */
 export class LocalEventPublisher implements EventPublisher {
   private readonly file: string;
 
