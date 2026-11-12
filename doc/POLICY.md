@@ -16,10 +16,14 @@ contains the rules that follow from this repository's actual purpose,
 requirements, architecture, operating model, compatibility commitments, and
 release model.
 
-This document is self-contained. A maintainer does not need a private standard,
-an internal document, or another repository in order to apply it. Where a rule
-is common across repositories, the rule is stated here. Where a rule exists
-because of this repository, that specialization is stated in Section 2.
+This document stands on its own. It is the whole implementation policy of this
+repository, and no rule here is completed by a document kept somewhere else. A
+subject it does not cover is a gap in this document, to be filled here rather
+than looked up elsewhere.
+
+Where a rule is common across repositories, the rule is stated here. Where a
+rule exists because of this repository, that specialization is stated in
+Section 2.
 
 ## 0. Governing Principle
 
@@ -82,16 +86,20 @@ automated tool's preference does not override that decision.
 
 ### 1.3 Wording Strength
 
-Reserve absolute wording such as `must`, `always`, and `never` for an invariant
-that admits no reasonable exception.
+Use `must`, `always`, and `never` only for invariants that admit no reasonable
+exception. Express preferences and situational decisions with `prefer`,
+`should`, or other qualified wording.
 
-Use wording such as `prefer`, `should`, or `when appropriate` for a design
-preference, recommendation, or situational rule.
+Do not apply a rule literally where doing so would defeat the repository's
+stated purpose, intended behavior, compatibility, safety, or approved change
+scope.
 
-Do not write or apply a rule so that its literal wording defeats the rule's
-purpose, the governing principle, the stated scope, security, safety, or
-intended behavior. Where a lower-level wording and a higher-level policy purpose
-conflict, follow the higher-level purpose and correct the lower-level wording.
+Where the applicable specifications and policy leave a legitimate choice
+open, an explicit maintainer decision governs that choice. General
+conventions do not override it.
+
+Where a lower-level wording and a higher-level policy purpose conflict, follow
+the higher-level purpose and correct the lower-level wording.
 
 This is not a formal MUST/SHOULD/MAY taxonomy.
 
@@ -102,9 +110,28 @@ reformatting, modernization, cleanup, renaming, dependency work, feature work,
 or documentation rewriting does not ride along with it, even when it would be a
 reasonable change on its own.
 
-Documentation work, policy work, review, diagnostics, cleanup, or another task
-whose stated scope does not include implementation change does not expand into
-implementation merely because an implementation improvement is noticed.
+Documentation work, policy work, review, diagnostics, cleanup, or another
+task whose stated scope does not include an implementation change must not
+expand into one merely because an improvement opportunity is discovered.
+
+Before changing established behavior, weigh the probability and impact of the
+failure being prevented against the added complexity, new failure modes,
+compatibility risk, operational cost, maintenance cost, and rollback cost.
+
+A safety-motivated change is not automatically justified by Safety having
+priority over Efficiency. Added complexity can itself create new failure
+modes, compatibility risk, operational risk, and maintenance cost. Evaluate
+the proposed change as a whole.
+
+Behavior that has operated reliably over time is evidence and has value of
+its own. Do not refactor established infrastructure merely because another
+design appears cleaner, more modern, or more defensive.
+
+An implementation change is made only when that change has been explicitly
+chosen as part of the work being performed. Before deployment, validate it in
+the supported and representative environments affected by the change. A
+successful check in one convenient environment is not sufficient evidence for
+a change whose compatibility risk extends to other supported environments.
 
 When the task does not require a behavior change, preserve the intended and
 valid existing observable behavior of the affected content. That includes, as
@@ -122,6 +149,15 @@ When an authorized implementation change alters behavior or an interface that
 the repository documents, update the directly affected documentation or
 specification in the same coherent change. That requirement does not authorize
 unrelated documentation cleanup.
+
+The implementation is the primary evidence of what currently happens. It is
+not, by itself, proof that the current behavior is the intended specification.
+
+When implementation and documentation disagree, compare the implementation,
+documented interface, component header, history, existing design, and
+maintenance intent. If the implementation contains a regression, do not adopt
+that regression as the specification merely because it is present in the
+current code.
 
 Changing documentation does not silently change executable behavior. If a
 document and implementation disagree, determine which side is wrong from the
@@ -282,19 +318,34 @@ Comments and identifiers are written in English except where non-English text
 is required by the product, protocol, localization, fixture, test data, or
 text-processing behavior.
 
-A comment preserves a reason, constraint, non-obvious intent, or decision that a
-later change could otherwise undo. Do not use comments merely to restate code
+A comment preserves a reason, constraint, non-obvious intent, or decision that
+a later change could otherwise undo. Do not use comments merely to restate code
 whose operation is already evident.
 
 Write English explanatory prose in clear, natural sentences. Do not replace a
 sentence with a label and a colon, a status prefix such as `Implement:` or
-`Incompatible:`, a symbol, or an unexplained abbreviation. Apply this to
-English prose in comments, docstrings, documentation, version histories,
-release notes, commit messages, and pull request descriptions. This rule does
-not alter the established forms of headings, list labels, tables, code,
-configuration syntax, machine-readable fields, literal interface strings, or
-non-English content required by the repository's purpose. Do not rewrite
-historical entries or unrelated text merely to align their style.
+`Incompatible:`, a symbol, or an unexplained abbreviation.
+
+Apply this to English prose in comments, docstrings, documentation, version
+histories, release notes, commit messages, and pull request descriptions.
+
+This rule does not alter the established forms of headings, list labels,
+tables, code, configuration syntax, machine-readable fields, literal
+interface strings, or non-English content required by the repository's
+purpose.
+
+Wrap ordinary prose at approximately 80 columns where practical. Preserve
+the logical structure of paragraphs, lists, and other document elements.
+Do not break URLs, code, tables, identifiers, or other elements whose
+structure requires a longer line.
+
+Shared boilerplate must retain its common wording, line breaks, blank lines,
+and formatting. Do not reformat it independently in individual repositories.
+Its established common form takes precedence over the ordinary line-wrapping
+guideline.
+
+Do not rewrite historical entries or unrelated text merely to align their
+style.
 
 ### 1.13 Documentation
 
@@ -342,7 +393,24 @@ knowledge, a previous conversation, or an unstated assumption.
 ### 1.14 Pull Request Scope and History
 
 A pull request presents the change it proposes, not the sequence of corrections
-that produced it. It carries one coherent higher-level purpose.
+that produced it.
+
+A pull request carries one coherent higher-level purpose, which may require
+coordinated changes across several files or responsibilities.
+
+Do not split one approved purpose mechanically by individual finding, file,
+or review comment, and do not include unrelated cleanup, formatting, or
+feature work.
+
+Represent one coherent change as one commit and amend review corrections
+instead of accumulating follow-up commits.
+
+Rewriting the history of a branch under review requires an explicit
+instruction from the maintainer. When such a rewrite is authorized, use
+`--force-with-lease` and limit the operation to the branch under review.
+
+Check the final branch against its base to remove abandoned intermediate
+wording and work. Merge only with explicit maintainer approval.
 
 #### 1.14.1 One Purpose to a Pull Request
 
@@ -368,14 +436,6 @@ that produced it. It carries one coherent higher-level purpose.
   purpose.
 
 #### 1.14.2 One Coherent Change to One Commit
-
-A branch that carries one coherent change carries it as one commit.
-
-Revise that commit by amending it rather than adding chronology commits such as
-`fix review comment`, `address feedback`, `follow-up`, or `resolve conflict`.
-
-When rewriting a branch already pushed for review, use a safe lease-checked
-force update rather than an unconditional force update.
 
 A branch contains several commits only when it genuinely contains several
 independent changes and the maintainer has explicitly chosen to group those
@@ -425,8 +485,8 @@ information, and whether directly affected documentation remains correct.
 ### 1.16 Attribution and Licensing
 
 Content adapted from an external article, answer, documentation example, source
-file, dataset, or other third-party material credits its source and respects the
-license or redistribution terms that apply to it.
+file, dataset, or other third-party material credits its source and respects
+the license or redistribution terms that apply to it.
 
 Repository-owned content follows the repository's declared license. Third-party
 code, data, documentation, assets, and dependencies retain or satisfy their
@@ -624,6 +684,23 @@ when that file has an independent behavior or specification change.
 A repository version increase does not bump every source-file version at once,
 and a source-file version change does not automatically increase the repository
 version.
+
+These rules apply to individual source files that carry their own version
+history. Repository release versions are governed separately.
+
+- Source file versions use a two-level `major.minor` scheme.
+- When incrementing `minor` would reach `10`, roll over instead: increment
+  `major` by 1 and reset `minor` to `0` (for example `v0.9` -> `v1.0`,
+  `v1.9` -> `v2.0`, `v2.9` -> `v3.0`).
+- Do not continue `minor` past `9` as in standard semantic versioning
+  (do not use `v1.10`, `v1.11`, ...).
+- Raising `major` for a reason other than the rollover is a decision the
+  maintainer makes, not one this document derives from the change.
+- Removing or renaming an option, changing what an existing argument means,
+  changing a default so that an unchanged invocation does something else, and
+  changing how a path or a configuration value is resolved are all incompatible
+  changes. Say so in the `Version History` entry, so that the number the change
+  is released under can be chosen knowing that.
 
 When a file format requires a leading directive such as a shebang, encoding
 declaration, or other syntactically significant prefix, that directive remains
@@ -1126,13 +1203,19 @@ A pull request is reviewed as the complete diff from `master` to its head. It is
 not considered clean merely because the latest incremental commit looks
 correct.
 
-Merging a pull request is a human responsibility. An automated agent does not
-merge a pull request unless the maintainer explicitly instructs it to do so.
+Unless explicitly instructed otherwise by the maintainer, an automated agent
+must commit authorized changes to a work branch and submit them through a
+pull request targeting the approved base branch.
 
-An automated agent must not commit or push directly to `master`.
-It must commit authorized changes to a work branch and submit them through
-a pull request targeting the approved base branch. This paragraph does not
-change a human maintainer's authority or the existing merge approval rule.
+An automated agent must not commit or push directly to `master` without
+explicit instructions from the maintainer authorizing that operation.
+
+Creating or updating a pull request does not authorize the agent to merge it
+or enable auto-merge. Either action requires an explicit instruction from
+the maintainer.
+
+Authorization for one operation does not imply authorization for another.
+These rules do not change a human maintainer's authority.
 
 ### 2.24 Maintenance Standard
 
